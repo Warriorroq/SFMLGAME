@@ -39,6 +39,8 @@ void Game::Update()
 {
 	thread _draw = thread(&Game::Draw, this);
 	thread _logic = thread(&Game::LogicUpdate, this);
+	_draw.join();
+	_logic.join();
 	if (GetRenderWindow().pollEvent(_event))
 	{
 		if (_event.type == Event::Closed) {
@@ -46,8 +48,6 @@ void Game::Update()
 			GetRenderWindow().close();
 		}
 	}
-	_draw.join();
-	_logic.join();
 	ThisThreadSleep();
 }
 
