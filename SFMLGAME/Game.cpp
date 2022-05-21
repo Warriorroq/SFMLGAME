@@ -2,6 +2,7 @@
 #include <iostream>
 #include <thread>
 #include <algorithm>
+#include <limits.h>
 
 using namespace std;
 
@@ -54,7 +55,7 @@ void Game::ThisThreadSleep()
 {
 	int timeElapsed = _deltaClock.getElapsedTime().asMilliseconds();
 	int waitTime = _updateTimeInMiliseconds - timeElapsed;
-	this_thread::sleep_for(chrono::milliseconds(waitTime));
+	this_thread::sleep_for(chrono::milliseconds(clamp(waitTime, 0, INT_MAX)));
 	_deltaClock.restart();
 }
 
