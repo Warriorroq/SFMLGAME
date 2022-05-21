@@ -36,8 +36,8 @@ bool Game::IsGameWorking()
 
 void Game::Update()
 {
-	thread _draw = thread([this]() {Draw(); });
-	thread _logic = thread([this]() {LogicUpdate(); });
+	thread _draw = thread(&Game::Draw, this);
+	thread _logic = thread(&Game::LogicUpdate, this);
 	if (GetRenderWindow().pollEvent(_event))
 	{
 		if (_event.type == Event::Closed) {

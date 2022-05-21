@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <olc_net.h>
+#include <thread>
 
 using namespace olc;
 using namespace net;
