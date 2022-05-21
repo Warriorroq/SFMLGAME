@@ -3,8 +3,6 @@
 #include <thread>
 #include <algorithm>
 
-using namespace olc;
-using namespace net;
 using namespace std;
 
 Game* Game::instance = 0;

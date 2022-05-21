@@ -3,6 +3,8 @@
 #include <memory>
 #include <olc_net.h>
 
+using namespace olc;
+using namespace net;
 using namespace sf;
 
 class Game
