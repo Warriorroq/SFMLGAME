@@ -5,6 +5,8 @@ VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SFMLGAME", "SFMLGAME\SFMLGAME.vcxproj", "{080689EE-7F19-4070-A188-95C21DBD0F1B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SFMLGAMEClient", "SFMLGAMEClient\SFMLGAMEClient.vcxproj", "{BC2962AB-5C62-4C6B-AD31-8291C88C329E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{080689EE-7F19-4070-A188-95C21DBD0F1B}.Release|x64.Build.0 = Release|x64
 		{080689EE-7F19-4070-A188-95C21DBD0F1B}.Release|x86.ActiveCfg = Release|Win32
 		{080689EE-7F19-4070-A188-95C21DBD0F1B}.Release|x86.Build.0 = Release|Win32
+		{BC2962AB-5C62-4C6B-AD31-8291C88C329E}.Debug|x64.ActiveCfg = Debug|x64
+		{BC2962AB-5C62-4C6B-AD31-8291C88C329E}.Debug|x64.Build.0 = Debug|x64
+		{BC2962AB-5C62-4C6B-AD31-8291C88C329E}.Debug|x86.ActiveCfg = Debug|Win32
+		{BC2962AB-5C62-4C6B-AD31-8291C88C329E}.Debug|x86.Build.0 = Debug|Win32
+		{BC2962AB-5C62-4C6B-AD31-8291C88C329E}.Release|x64.ActiveCfg = Release|x64
+		{BC2962AB-5C62-4C6B-AD31-8291C88C329E}.Release|x64.Build.0 = Release|x64
+		{BC2962AB-5C62-4C6B-AD31-8291C88C329E}.Release|x86.ActiveCfg = Release|Win32
+		{BC2962AB-5C62-4C6B-AD31-8291C88C329E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
