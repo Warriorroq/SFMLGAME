@@ -1,6 +1,7 @@
 #pragma once
 #include <olc_net.h>
 #include "Game.h"
+#include <ddeml.h>
 
 using namespace olc;
 using namespace net;
@@ -16,7 +17,12 @@ public:
 
 	void ConnectToServer() 
 	{
-		GameClient::instance->Connect("127.0.0.1", 60000);
+		ShowWindow(::GetConsoleWindow(), SW_SHOW);
+		cout << "enter ip\n";
+		string ip;
+		getline(cin, ip);
+		GameClient::instance->Connect(ip, 60000);
+		//ShowWindow(::GetConsoleWindow(), SW_HIDE);
 		_clientThread = std::thread(&GameClient::GetMessages, this);
 	}
 
@@ -42,7 +48,8 @@ public:
 			if (!Incoming().IsEmpty())
 			{
 				auto msg = Incoming().PopFront().msg;
-				Game::instance->ReadMessage(msg);
+				std::cout << "id " << (uint32_t)msg.header.id << " size " << msg.size() << "\n";
+				Game::instance->UpdateByMessage(msg);
 			}
 		}
 		else
@@ -54,6 +61,9 @@ public:
 	void ClientDisconnect()
 	{
 		isActive = false;
+		Message<CustomMessages> msg;
+		msg.header.id = CustomMessages::Disconnect;
+		Send(msg);
 		Disconnect();
 	}
 private:

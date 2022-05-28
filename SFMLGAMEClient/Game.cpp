@@ -38,18 +38,77 @@ bool Game::IsGameWorking()
 
 void Game::Update()
 {
-	thread _draw = thread(&Game::Draw, this);
+	PollEvents();
 	thread _logic = thread(&Game::LogicUpdate, this);
-	_draw.join();
+	Draw();
 	_logic.join();
+	ThisThreadSleep();
+}
+Vector2f velocity;
+Vector2f newVelocity;
+void Game::PollEvents()
+{
 	if (GetRenderWindow().pollEvent(_event))
 	{
-		if (_event.type == Event::Closed) {
-
+		switch (_event.type)
+		{
+		case Event::Closed:
+		{
 			GetRenderWindow().close();
+			GameClient::instance->ClientDisconnect();
+			break;
+		}
+		case Event::MouseMoved:
+		{
+			onMouseMove(_event.mouseMove);
+			break;
+		}
+		case Event::KeyPressed:
+		{
+			if (_event.key.code == Keyboard::C)
+			{
+				Message<CustomMessages> msg;
+				msg.header.id = CustomMessages::CreatePlayer;
+				GameClient::instance->Send(msg);
+			}
+			if (_event.key.code == Keyboard::D)
+			{
+				newVelocity.x = 10;
+			}
+			else if (_event.key.code == Keyboard::A)
+			{
+				newVelocity.x = -10;
+			}
+			if (newVelocity != velocity)
+			{
+				Message<CustomMessages> msg;
+				msg.header.id = CustomMessages::UpdateObject;
+				msg << newVelocity.y << newVelocity.x << PlayerAction::VeclocityChanged;
+				GameClient::instance->Send(msg);
+				velocity = newVelocity;
+			}
+			break;
+		}
+		case Event::KeyReleased:
+		{
+			if (_event.key.code == Keyboard::D || _event.key.code == Keyboard::A)
+			{
+				newVelocity.x = 0;
+			}
+			if (newVelocity != velocity)
+			{
+				Message<CustomMessages> msg;
+				msg.header.id = CustomMessages::UpdateObject;
+				msg << newVelocity.y << newVelocity.x << PlayerAction::VeclocityChanged;
+				GameClient::instance->Send(msg);
+				velocity = newVelocity;
+			}
+			break;
+		}
+		default:
+			break;
 		}
 	}
-	ThisThreadSleep();
 }
 
 void Game::ThisThreadSleep()
@@ -62,12 +121,16 @@ void Game::ThisThreadSleep()
 
 void Game::LogicUpdate()
 {
-
+	_scene.Update();
 }
 
 void Game::Draw()
 {
-
+	_drawMutext.lock();
+	_window->clear();
+	_scene.Draw(*_window);
+	_window->display();
+	_drawMutext.unlock();
 }
 
 float Game::GetDeltaTime()
@@ -75,25 +138,19 @@ float Game::GetDeltaTime()
 	return (float)_deltaClock.getElapsedTime().asMilliseconds() / (float)secondInMiliseconds;
 }
 
-void Game::ReadMessage(Message<CustomMessages>& msg)
+void Game::UpdateByMessage(Message<CustomMessages>& msg)
 {
-	cout << (int)msg.header.id << endl;
-	switch (msg.header.id)
-	{
-	default:
-	{
-		break;
-	}
-	}
+	_scene.ReactOnMessage(msg);
+}
+
+void Game::LoadContent()
+{
+
 }
 
 void Game::Start()
 {
-	Message<CustomMessages> msg;
-	msg.header.id = CustomMessages::CreateObject;
-	msg << ObjectForCreation::Player;
-	GameClient::instance->Send(msg);
-
+	LoadContent();
 	while (IsGameWorking()) {
 		instance->Update();
 	}

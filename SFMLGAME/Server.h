@@ -21,20 +21,16 @@ public:
 
 	void StartServer() 
 	{
-		_isActive = true;
 		instance->Start();
 		p_serverThread = shared_ptr<thread>(new thread([this]() {UpdateServer(); }));
 	}
 
 	void StopServer()
 	{
-		_isActive = false;
 		Stop();
 	}
 
-	Server(uint16_t port) : CommonServer<CustomMessages>(port) {
-		_isActive = false;
-	};
+	Server(uint16_t port) : CommonServer<CustomMessages>(port) {};
 
 protected:
 	static shared_ptr<thread> p_serverThread;
@@ -46,24 +42,19 @@ protected:
 		return true;
 	}
 
-	virtual void OnClientDisconnect(std::shared_ptr<Connection<CustomMessages>> client)
-	{
-		Print("Removing client ");
-		PrintLine(client->GetID());
-	}
+	virtual void OnClientDisconnect(std::shared_ptr<Connection<CustomMessages>> client){}
 
 	virtual void OnMessage(std::shared_ptr<Connection<CustomMessages>> client, Message<CustomMessages>& msg)
 	{
-		Game::instance->ReadServerMessage(msg);
+		Game::instance->AddMessageToQueue(client, msg);
 	}
 
 private:
-	bool _isActive;
 	void UpdateServer() 
 	{
-		while (_isActive)
+		while (Game::instance->GetRenderWindow().isOpen())
 		{
-			Update(1);			
+			Update(1, true);			
 			std::this_thread::sleep_for(std::chrono::milliseconds(1000 / 60));
 		}
 	}

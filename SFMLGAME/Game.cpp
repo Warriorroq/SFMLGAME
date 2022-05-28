@@ -3,6 +3,8 @@
 #include <thread>
 #include <algorithm>
 #include <limits.h>
+#include <thread>
+#include <Windows.h>
 
 using namespace std;
 
@@ -35,19 +37,37 @@ bool Game::IsGameWorking()
 	return instance->GetRenderWindow().isOpen();
 }
 
-void Game::Update()
+void Game::PollEvents() 
 {
-	thread _draw = thread(&Game::Draw, this);
-	thread _logic = thread(&Game::LogicUpdate, this);
-	_draw.join();
-	_logic.join();
 	if (GetRenderWindow().pollEvent(_event))
 	{
-		if (_event.type == Event::Closed) {
-
+		switch (_event.type)
+		{
+		case Event::Closed:
+		{
 			GetRenderWindow().close();
+			break;
+		}
+		case Event::KeyPressed:
+		{
+			if(_event.key.code == Keyboard::C)
+				ShowWindow(::GetConsoleWindow(), SW_SHOW);
+			if (_event.key.code == Keyboard::H)
+				ShowWindow(::GetConsoleWindow(), SW_HIDE);
+		}
+		default:
+			break;
 		}
 	}
+}
+
+void Game::Update()
+{
+	ReadMessages();
+	PollEvents();
+	thread logic = thread(&Game::LogicUpdate, this);	
+	Draw();
+	logic.join();
 	ThisThreadSleep();
 }
 
@@ -61,12 +81,14 @@ void Game::ThisThreadSleep()
 
 void Game::LogicUpdate()
 {
-
+	_scene.Update();
 }
 
 void Game::Draw()
 {
-
+	_window->clear();
+	_scene.Draw(*_window);
+	_window->display();
 }
 
 float Game::GetDeltaTime()
@@ -74,21 +96,42 @@ float Game::GetDeltaTime()
 	return (float)_deltaClock.getElapsedTime().asMilliseconds() / (float)secondInMiliseconds;
 }
 
-void Game::ReadServerMessage(Message<CustomMessages>& msg)
+void Game::AddMessageToQueue(shared_ptr<Connection<CustomMessages>> client, Message<CustomMessages>& msg)
 {
-	cout << (int)msg.header.id <<endl;
-	switch (msg.header.id)
+	_serverMessages.push(tuple<shared_ptr<Connection<CustomMessages>>, Message<CustomMessages>>(client, msg));
+}
+
+void Game::ReadMessages()
+{
+	while (!_serverMessages.empty())
 	{
-		default:
-		{
-			break;
-		}
+		auto message = _serverMessages.front();
+		_serverMessages.pop();
+		_scene.ReactOnMessage(get<0>(message), get<1>(message));
 	}
+}
+
+void Game::LoadContent()
+{
+
 }
 
 void Game::Start()
 {
+	::ShowWindow(GetConsoleWindow(), SW_HIDE);
+	LoadContent();
 	while (IsGameWorking()) {
 		instance->Update();
 	}
+}
+
+void Game::AppendObjectToScene(GameObject* gameObject)
+{
+	_scene.AppendObject(gameObject);
+}
+
+void Game::DisconnectPlayer(uint32_t id)
+{
+	cout << "disconnect " << id << endl;
+	_scene.DisconnectPlayer(id);
 }
