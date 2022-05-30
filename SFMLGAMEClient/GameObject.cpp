@@ -2,20 +2,25 @@
 
 void GameObject::Draw(RenderWindow& window)
 {
-	if (_shape)
-		window.draw(*_shape);
+	if (p_shape)
+		window.draw(*p_shape);
 }
 
 void GameObject::GetStateByMessage(Message<CustomMessages>& msg)
 {
-	if (_shape)
+	if (p_shape)
 	{
 		Vector2f vec;
 		msg >> vec.y >> vec.x;
-		_shape->setPosition(vec);
+		p_shape->setPosition(vec);
 	}
 }
 
 void GameObject::SetShape(Shape* shape) {
-	_shape = shape;
+	p_shape = shape;
+}
+
+bool GameObject::IsAlive()
+{
+	return p_isAlive;
 }

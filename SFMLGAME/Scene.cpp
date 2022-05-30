@@ -1,5 +1,4 @@
 #include "Scene.h"
-#include "GameObjectPlayer.h"
 #include "Server.h"
 
 using namespace sf;
@@ -31,15 +30,19 @@ void Scene::Update()
 
 void Scene::ClearDeadObjects()
 {
+	Message<CustomMessages> msg;
+	msg.header.id = CustomMessages::DeleteObjects;
 	for (auto object : _objectsForRemove)
 	{
+		msg << object;
 		_objects.erase(object);
 	}
+	Server::instance->MessageAllClients(msg);
 }
 
 void Scene::ReactOnMessage(shared_ptr<Connection<CustomMessages>> client, Message<CustomMessages>& msg)
 {
-	cout << "received " << (uint32_t)msg.header.id << " size" << msg.size()<<"\n";
+	//cout << "received " << (uint32_t)msg.header.id << " size" << msg.size()<<"\n";
 	switch (msg.header.id)
 	{
 	case CustomMessages::CreatePlayer:
@@ -52,20 +55,14 @@ void Scene::ReactOnMessage(shared_ptr<Connection<CustomMessages>> client, Messag
 	}
 	case CustomMessages::UpdateObject:
 	{
-		PlayerAction playerAction;
-		msg >> playerAction;
-		if (playerAction == PlayerAction::VeclocityChanged)
-		{
-			Vector2f velocity;
-			msg >> velocity.x >> velocity.y;
-			auto player = _lobby.GetPlayersObject(client->GetID());
-			player->SetVelocity(velocity);
-		}
+		auto player = _lobby.GetPlayersObject(client->GetID());
+		player->Update(msg);
 		break;
 	}
 	case CustomMessages::Disconnect:
 	{
 		cout << "disconnected " << client << "\n";
+
 		_lobby.RemovePlayer(client->GetID());
 		break;
 	}
@@ -89,4 +86,10 @@ void Scene::SynchronizeWithNewPlayer(shared_ptr<Connection<CustomMessages>> clie
 {
 	for (auto object : _objects)
 		Server::instance->MessageClient(client, object.second->SendDataToCreateObject());
+}
+
+void Scene::DestroyGameObject(GameObject* gameObject)
+{
+	gameObject->Destroy();
+	_objectsForRemove.push_back(gameObject->id);
 }

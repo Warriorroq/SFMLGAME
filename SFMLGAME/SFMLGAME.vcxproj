@@ -149,23 +149,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AgarPlayer.cpp" />
+    <ClCompile Include="AgarPlayer.h" />
+    <ClCompile Include="Food.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="IDGiver.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GameObjectPlayer.cpp" />
     <ClCompile Include="Lobby.cpp" />
     <ClCompile Include="Lobby.h" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="GameObjectTransform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Food.h" />
     <ClInclude Include="IDGiver.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="GameObjectPlayer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="GameObjectTransform.h" />
+    <ClInclude Include="VectorMath.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

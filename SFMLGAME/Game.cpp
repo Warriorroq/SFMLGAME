@@ -135,3 +135,8 @@ void Game::DisconnectPlayer(uint32_t id)
 	cout << "disconnect " << id << endl;
 	_scene.DisconnectPlayer(id);
 }
+
+void Game::DestroyGameObject(GameObject* object)
+{
+	_scene.DestroyGameObject(object);
+}

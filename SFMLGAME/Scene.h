@@ -21,10 +21,11 @@ public:
 	void AppendObject(GameObject*);
 	void DisconnectPlayer(uint32_t);
 	void SynchronizeWithNewPlayer(shared_ptr<Connection<CustomMessages>>);
+	void DestroyGameObject(GameObject* );
+
 private:
 	Lobby _lobby;
 	map<long, GameObject*> _objects;
 	list<long> _objectsForRemove;
-
 	void ClearDeadObjects();
 };

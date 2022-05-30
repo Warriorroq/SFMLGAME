@@ -1,6 +1,7 @@
 #include "Scene.h"
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include "GamerObjectPlayer.h"
 
 using namespace sf;
 
@@ -17,7 +18,7 @@ void Scene::Update()
 	for (auto object : _objects)
 	{
 		auto gameObject = object.second;
-		if (gameObject->isAlive)
+		if (gameObject->IsAlive())
 		{
 			gameObject->Update();
 		}
@@ -41,7 +42,7 @@ void Scene::CreateObject(Message<CustomMessages>& msg)
 {
 	long id = -1;
 	msg >> id;
-	GameObject* object = new GameObject(id);
+	GameObject* object = new GameObjectPlayer(id);
 	if (msg.size() != 0)
 	{
 		Shape* shape = 0;

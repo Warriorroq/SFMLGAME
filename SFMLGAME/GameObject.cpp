@@ -12,7 +12,10 @@ void GameObject::Update() {}
 void GameObject::Draw(RenderWindow& window)
 {
 	if (p_shape)
+	{
+		p_shape->setPosition(transform.GetPosition());
 		window.draw(*p_shape);
+	}
 }
 
 Message<CustomMessages> GameObject::SendGameObjectState()
@@ -41,7 +44,8 @@ Message<CustomMessages> GameObject::SendDataToCreateObject()
 	return msg;
 }
 
-void GameObject::SetShape(Shape* shape) {
+void GameObject::SetShape(Shape* shape) 
+{
 	p_shape = shape;
 }
 
@@ -53,4 +57,15 @@ void GameObject::Update(Message<CustomMessages>& msg)
 bool GameObject::IsAlive()
 {
 	return p_isAlive;
+}
+
+void GameObject::Destroy()
+{
+	p_isAlive = false;
+	OnDestroy();
+}
+
+void GameObject::OnDestroy() 
+{
+
 }

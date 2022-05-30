@@ -21,9 +21,10 @@ public:
 	void Update();
 	void PollEvents();
 	void AppendObjectToScene(GameObject*);
+	void DestroyGameObject(GameObject*);
 	void DisconnectPlayer(uint32_t);
 	void AddMessageToQueue(shared_ptr<Connection<CustomMessages>>, Message<CustomMessages>&);
-	float GetDeltaTime();
+	float GetDeltaTime();	
 	~Game();
 
 protected:

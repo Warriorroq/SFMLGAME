@@ -11,15 +11,18 @@ class GameObject
 {
 public:
 	const long& id;
-	GameObject(long id) : id(_id), _id(id), isAlive(true), _shape(0) {};
-	bool isAlive;
+	GameObject(long id) : id(_id), _id(id), p_isAlive(true), p_shape(0) {};
 
 	virtual void Update() {}
 	virtual void Draw(RenderWindow& window);
 	virtual void GetStateByMessage(Message<CustomMessages>& msg);
 	void SetShape(Shape* shape);
+	bool IsAlive();
+
+protected:
+	Shape* p_shape;
+	bool p_isAlive;
 
 private:
-	Shape* _shape;
 	long _id;
 };
