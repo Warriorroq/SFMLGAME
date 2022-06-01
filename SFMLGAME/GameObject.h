@@ -2,31 +2,26 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "SFML/Graphics/Shape.hpp"
 #include <olc_net.h>
-#include "GameObjectTransform.h"
-
-using namespace olc;
-using namespace net;
-using namespace sf;
 
 class GameObject
 {
 public:
 	const long& id;
-	GameObject(long id) : id(p_id), p_id(id), p_isAlive(true), p_shape(0), transform(Vector2f()) {};
+	GameObject(const long id) : id(p_id), p_id(id), p_isAlive(true), p_shape(nullptr) {}
 	virtual ~GameObject();	
 	virtual void Update();
-	virtual void Draw(RenderWindow& window);
-	virtual Message<CustomMessages> SendGameObjectState();
-	virtual Message<CustomMessages> SendDataToCreateObject();
-	virtual void Update(Message<CustomMessages>&);
-	void SetShape(Shape* shape);
+	virtual void Draw(sf::RenderWindow& window);
+	virtual olc::net::Message<CustomMessages> SendGameObjectState();
+	virtual olc::net::Message<CustomMessages> SendDataToCreateObject();
+	virtual void Update(olc::net::Message<CustomMessages>&);
+	void SetShape(sf::Shape* shape);
 	bool IsAlive();
 	void Destroy();
-	GameObjectTransform transform;
+	sf::Vector2f position;
 
 protected:
 	virtual void OnDestroy();
-	bool p_isAlive;
-	Shape* p_shape;
 	long p_id;
+	bool p_isAlive;
+	sf::Shape* p_shape;
 };

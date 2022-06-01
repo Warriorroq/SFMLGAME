@@ -30,7 +30,7 @@ public:
 	GameClient()
 	{
 		isActive = true;
-	};
+	}
 
 	void PingServer() {
 		Message<CustomMessages> msg;

@@ -1,5 +1,9 @@
 #include "Lobby.h"
 #include "IDGiver.h"
+#include <SFML/Graphics/RectangleShape.hpp>
+
+using namespace std;
+using  namespace sf;
 
 void Lobby::CreatePlayer(uint32_t id, AgarPlayer* player)
 {
@@ -15,9 +19,6 @@ AgarPlayer* Lobby::CreatePlayerAvatar(uint32_t client)
 {
 	auto id = IDgGiver::IncreaseLastId();
 	AgarPlayer* player = new AgarPlayer(id);
-	RectangleShape* rect = new RectangleShape(Vector2f(100, 100));
-	rect->setFillColor(Color::White);
-	rect->setPosition(Vector2f(100, 100));
 	CreatePlayer(client, player);
 	return player;
 }

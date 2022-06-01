@@ -4,7 +4,7 @@
 class Food : public GameObject
 {
 public:
-	Food(long id, float mass) : mass(mass), GameObject(id){};
-	Message<CustomMessages> SendDataToCreateObject() override;
+	Food(long id, float mass) : GameObject(id), mass(mass){}
+	olc::net::Message<CustomMessages> SendDataToCreateObject() override;
 	float mass;
 };

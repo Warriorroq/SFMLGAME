@@ -2,6 +2,10 @@
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
+using namespace olc;
+using namespace net;
+using namespace sf;
+
 GameObject::~GameObject()
 {
 	delete p_shape;
@@ -13,7 +17,7 @@ void GameObject::Draw(RenderWindow& window)
 {
 	if (p_shape)
 	{
-		p_shape->setPosition(transform.GetPosition());
+		p_shape->setPosition(position);
 		window.draw(*p_shape);
 	}
 }
@@ -23,7 +27,7 @@ Message<CustomMessages> GameObject::SendGameObjectState()
 	Message<CustomMessages> msg;
 	msg.header.id = CustomMessages::UpdateObject;
 	if (p_shape)
-		msg << p_shape->getPosition().x << p_shape->getPosition().y;
+		msg << position.x << position.y;
 	msg << p_id;
 	return msg;
 }
@@ -34,7 +38,7 @@ Message<CustomMessages> GameObject::SendDataToCreateObject()
 	msg.header.id = CustomMessages::CreateObject;
 	if (p_shape)
 	{
-		msg<< p_shape->getPosition().x << p_shape->getPosition().y;
+		msg<< position.x << position.y;
 		if (dynamic_cast<CircleShape*>(p_shape))
 			msg << 0;
 		else if(dynamic_cast<RectangleShape*>(p_shape))
