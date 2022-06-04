@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "Server.h"
+#include "AgarPlayer.h"
 
 using namespace sf;
 

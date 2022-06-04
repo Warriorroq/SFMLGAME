@@ -1,6 +1,6 @@
 #include "Lobby.h"
 #include "IDGiver.h"
-#include <SFML/Graphics/RectangleShape.hpp>
+#include "AgarPlayer.h"	
 
 using namespace std;
 using  namespace sf;
